@@ -1,0 +1,1 @@
+{"description":"Portofolio mini QA: automation login dengan Page Object Model (Playwright). Situs latihan publik the-internet.herokuapp.com.","devDependencies":{"@playwright/test":"^1.49.0"},"name":"playwright-qa-login","private":true,"scripts":{"test":"playwright test","test:headed":"playwright test --headed"},"version":"1.0.0"}
