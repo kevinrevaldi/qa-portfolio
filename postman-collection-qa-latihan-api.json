@@ -1,0 +1,110 @@
+{
+  "info": {
+    "_postman_id": "qa-latihan-api-jsonplaceholder",
+    "description": "Latihan API dari Bab 4 panduan belajar interview QA PT PAL: GET satu post, POST post baru, dan GET post yang tidak ada. Import file ini di Postman, lalu import environment pendampingnya (postman-environment-qa-latihan-api.json) atau ganti {{base_url}} secara manual.",
+    "name": "QA Latihan API - JSONPlaceholder",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Field title ada dan tidak kosong', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.title).to.be.a('string').and.not.empty;",
+              "});",
+              "pm.test('Post yang dikembalikan adalah id 1', function () {",
+              "    pm.expect(pm.response.json().id).to.eql(1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "name": "01 - GET post yang ada (positif)",
+      "request": {
+        "description": "Kasus positif: post dengan id 1 ada, jadi harus kembali 200 dengan field title.",
+        "method": "GET",
+        "url": "{{base_url}}/posts/1"
+      }
+    },
+    {
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Response mengembalikan id', function () {",
+              "    pm.expect(pm.response.json().id).to.exist;",
+              "});",
+              "pm.test('Title yang dikembalikan sama dengan yang dikirim', function () {",
+              "    pm.expect(pm.response.json().title).to.eql('Test case latihan QA');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "name": "02 - POST post baru",
+      "request": {
+        "body": {
+          "mode": "raw",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          },
+          "raw": "{\n  \"title\": \"Test case latihan QA\",\n  \"body\": \"Contoh body untuk latihan API testing\",\n  \"userId\": 1\n}"
+        },
+        "description": "Membuat resource baru. JSONPlaceholder adalah API latihan: ia mengembalikan 201 dan id, tapi tidak benar-benar menyimpan data.",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "url": "{{base_url}}/posts"
+      }
+    },
+    {
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Post yang tidak ada tidak mengembalikan data', function () {",
+              "    pm.expect(pm.response.json()).to.eql({});",
+              "});",
+              "pm.test('Status menandakan tidak ditemukan (404)', function () {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "name": "03 - GET post yang tidak ada (negatif)",
+      "request": {
+        "description": "Kasus negatif: post dengan id 9999 tidak ada. Body yang dikembalikan terverifikasi {} (cek live 1 Nov 2026); status yang diharapkan 404.",
+        "method": "GET",
+        "url": "{{base_url}}/posts/9999"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://jsonplaceholder.typicode.com"
+    }
+  ]
+}
